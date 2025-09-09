@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manga Artist Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #1e1e2f;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-box input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .card p {
+      color: #666;
+    }
+
+    .collections {
+      margin-top: 10px;
+    }
+
+    .collections ul {
+      padding-left: 20px;
+      margin: 0;
+      display: none;
+    }
+
+    .collections.active ul {
+      display: block;
+    }
+
+    .toggle-btn {
+      background-color: #1e1e2f;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #1e1e2f;
+      color: #fff;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .search-box input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manga Artist Dashboard</h1>
+    <p>Explore various manga artists and their collections</p>
+  </header>
+
+  <div class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for an artist..." />
+    </div>
+    <div class="grid" id="artistGrid">
+      <!-- Artist cards will be injected here -->
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Manga Collections Dashboard. All rights reserved.
+  </footer>
+
+  <script>
+    const artistsData = [
+      {
+        name: "Eiichiro Oda",
+        description: "Creator of the world-famous 'One Piece' series.",
+        collections: ["One Piece", "Wanted!", "Monsters"]
+      },
+      {
+        name: "Masashi Kishimoto",
+        description: "Best known for the 'Naruto' series.",
+        collections: ["Naruto", "Naruto Shippuden", "Samurai 8"]
+      },
+      {
+        name: "Akira Toriyama",
+        description: "Legendary artist behind 'Dragon Ball'.",
+        collections: ["Dragon Ball", "Dr. Slump", "Cowa!", "Sand Land"]
+      },
+      {
+        name: "Naoko Takeuchi",
+        description: "Famous for magical girl manga 'Sailor Moon'.",
+        collections: ["Sailor Moon", "Codename: Sailor V", "Love Call"]
+      },
+      {
+        name: "Hajime Isayama",
+        description: "Known for the dark and thrilling 'Attack on Titan'.",
+        collections: ["Attack on Titan", "Heart Break One", "Orz"]
+      },
+    ];
+
+    const grid = document.getElementById("artistGrid");
+
+    function createCard(artist) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("h2");
+      title.textContent = artist.name;
+
+      const desc = document.createElement("p");
+      desc.textContent = artist.description;
+
+      const collectionDiv = document.createElement("div");
+      collectionDiv.className = "collections";
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.textContent = "Show Collections";
+      toggleBtn.className = "toggle-btn";
+
+      const list = document.createElement("ul");
+      artist.collections.forEach(col => {
+        const li = document.createElement("li");
+        li.textContent = col;
+        list.appendChild(li);
+      });
+
+      toggleBtn.addEventListener("click", () => {
+        collectionDiv.classList.toggle("active");
+        toggleBtn.textContent = collectionDiv.classList.contains("active")
+          ? "Hide Collections"
+          : "Show Collections";
+      });
+
+      collectionDiv.appendChild(toggleBtn);
+      collectionDiv.appendChild(list);
+
+      card.appendChild(title);
+      card.appendChild(desc);
+      card.appendChild(collectionDiv);
+
+      return card;
+    }
+
+    function renderArtists(filter = "") {
+      grid.innerHTML = "";
+      const filteredArtists = artistsData.filter(artist =>
+        artist.name.toLowerCase().includes(filter.toLowerCase())
+      );
+      filteredArtists.forEach(artist => {
+        grid.appendChild(createCard(artist));
+      });
+    }
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      renderArtists(e.target.value);
+    });
+
+    // Initial render
+    renderArtists();
+  </script>
+</body>
+</html>
